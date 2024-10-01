@@ -1,6 +1,5 @@
 package br.com.apredendojava.screenmatch.service;
 
-import br.com.apredendojava.screenmatch.model.DadosSerie;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
