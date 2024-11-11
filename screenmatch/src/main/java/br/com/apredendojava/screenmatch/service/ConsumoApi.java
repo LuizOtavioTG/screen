@@ -17,10 +17,14 @@ public class ConsumoApi {
             response = client
                     .send(request, HttpResponse.BodyHandlers.ofString());
         } catch (IOException | InterruptedException e) {
-            throw new RuntimeException(e);
+            throw new ApiException("Erro ao tentar obter dados da API.", e);
         }
 
         return response.body();
     }
-
+    public static class ApiException extends RuntimeException {
+        public ApiException(String message, Throwable cause) {
+            super(message, cause);
+        }
+    }
 }
