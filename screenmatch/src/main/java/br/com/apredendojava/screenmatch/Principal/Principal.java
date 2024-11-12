@@ -18,7 +18,7 @@ public class Principal {
     private static final String APIKEY = "&apikey=6585022c";
     private static ConsumoApi consumoApi = new ConsumoApi();
     private static ConverteDados conversor = new ConverteDados();
-    private Scanner scan = new Scanner(System.in);
+    private  Scanner scan = new Scanner(System.in);
     public void exibemenu(){
         System.out.println("Digite o nome da série");
         String nomeSerie= scan.nextLine();
@@ -90,5 +90,19 @@ public class Principal {
                                 " Episódio: " + e.getTitulo() +
                                 " Data de Lançamento: " + e.getDataLacamento().format(formatter)
                 ));
+
+        Map<Integer, Double> avaliacoesPorTemporada = episodios.stream()
+                .filter(e -> e.getAvaliacao() > 0.0)
+                .collect(Collectors.groupingBy(Episodio::getTemporada,
+                        Collectors.averagingDouble(Episodio::getAvaliacao)));
+        System.out.println("Avaliações por Temporada: "+ avaliacoesPorTemporada);
+
+        DoubleSummaryStatistics est = episodios.stream()
+                .filter(e -> e.getAvaliacao() > 0.0)
+                .collect(Collectors.summarizingDouble(Episodio::getAvaliacao));
+        System.out.println("Média: " + est.getAverage());
+        System.out.println("Melhor nota:" + est.getMax());
+        System.out.println("Pior nota:" + est.getMin());
+        System.out.println("Quantidade de ep.:" + est.getCount());
     }
 }
