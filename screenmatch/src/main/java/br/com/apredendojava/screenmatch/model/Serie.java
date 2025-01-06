@@ -1,20 +1,33 @@
 package br.com.apredendojava.screenmatch.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.OptionalDouble;
 
+@Entity
+@Table(name = "series" )
 public class Serie {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY )
+    private Long id;
+    @Column(unique = false)
     private String titulo;
     private Integer totalTemporadas;
     private Double avaliacaoImdb;
+    @Enumerated(value = EnumType.STRING)
     private Categoria genero;
     private String atores;
     private String poster;
     private String sinopse;
+    @OneToMany(mappedBy = "serie", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Episodio> episodioList = new ArrayList<>();
 
-
+    public Serie(){
+    }
     public Serie(DadosSerie dadosSerie) {
         this.titulo = dadosSerie.titulo();
         this.totalTemporadas = dadosSerie.totalTemporadas();
@@ -23,6 +36,19 @@ public class Serie {
         this.atores = dadosSerie.atores();
         this.poster = dadosSerie.poster();
         this.sinopse = dadosSerie.sinopse();
+    }
+
+    public List<Episodio> getEpisodioList() {
+        return episodioList;
+    }
+
+    public void setEpisodioList(List<Episodio> episodioList) {
+        episodioList.forEach(e -> e.setSerie(this));
+        this.episodioList = episodioList;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getTitulo() {
@@ -91,6 +117,7 @@ public class Serie {
                 ", atores='" + atores + '\'' +
                 ", poster='" + poster + '\'' +
                 ", sinopse='" + sinopse + '\'' +
+                ", episódios='" + episodioList + '\'' +
                 '}';
     }
 }
